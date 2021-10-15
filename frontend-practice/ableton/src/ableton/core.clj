@@ -1,22 +1,24 @@
 (ns ableton.core
-  (:require [ruuter.core :as ruuter]
-            [hiccup2.core :as hiccup]
-            [ring.adapter.jetty :as ring-jetty]))
+  (:require
+   [ableton.layout :as layout]
+   [hiccup2.core :as hiccup]
+   [ring.adapter.jetty :as ring-jetty]
+   [ruuter.core :as ruuter]
+   [stylefy.core :as stylefy]))
 
 ;; Globals
 (defonce server (atom nil))
-
-(def body
-  [:html
-   [:body
-    "Hello, there"]])
 
 (def routes
   [{:path     "/"
     :method   :get
     :headers  {"Content-Type" "text/html"}
-    :response {:status 200
-               :body   (str (hiccup/html body))}}])
+    :response (fn [req]
+                {:status 200
+                 :body   (str
+                          (stylefy/query-with-styles
+                           (fn []
+                             (hiccup/html (layout/page)))))})}])
 
 (defn handler [req]
   (ruuter/route routes req))
@@ -34,6 +36,7 @@
 
 ;; Init
 (start-server)
+(stylefy/init)
 
 (comment
   (reset-server)
