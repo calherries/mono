@@ -1,16 +1,22 @@
 (ns ableton.core
   (:require [ruuter.core :as ruuter]
+            [hiccup2.core :as hiccup]
             [ring.adapter.jetty :as ring-jetty]))
 
 ;; Globals
 (defonce server (atom nil))
+
+(def body
+  [:html
+   [:body
+    "Hello, there"]])
 
 (def routes
   [{:path     "/"
     :method   :get
     :headers  {"Content-Type" "text/html"}
     :response {:status 200
-               :body   "<html><body>Hi there!</body></html>"}}])
+               :body   (str (hiccup/html body))}}])
 
 (defn handler [req]
   (ruuter/route routes req))
