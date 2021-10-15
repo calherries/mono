@@ -2,3 +2,5 @@
 **/*/.calva
 **/*/.nrepl-port
 **/*/vs-code.edn
+**/*/.vscode
+.vscode
