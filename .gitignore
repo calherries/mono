@@ -4,3 +4,4 @@
 **/*/vs-code.edn
 **/*/.vscode
 .vscode
+.DS_Store
