@@ -3,7 +3,7 @@
             [garden.core :refer [css]]
             [stylefy.core :as stylefy :refer [use-style]]))
 
-(defn home []
+(defn ableton []
   [:div (use-style
          {:display        :flex
           :flex-direction :column
