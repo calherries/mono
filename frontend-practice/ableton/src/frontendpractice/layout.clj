@@ -3,7 +3,7 @@
             [garden.core :refer [css]]
             [stylefy.core :as stylefy :refer [use-style]]))
 
-(defn page [container]
+(defn page [body]
   [:html
    [:head
     [:link {:rel "stylesheet" :href "https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display&display=swap"}]
@@ -11,10 +11,4 @@
     [:style {:id "_stylefy-server-styles_"} "_stylefy-server-styles-content_"] ; Generated CSS will be inserted here
     [:style {:id "_stylefy-constant-styles_"}]
     [:style {:id "_stylefy-styles_"}]]
-   [:body (use-style
-           {:line-height 1.5
-            :margin      0
-            :font-family "Archivo,sans-serif"
-            :color       "rgba(0,0,0,.8)"})
-    (components/header)
-    [:main (container)]]])
+   (body)])

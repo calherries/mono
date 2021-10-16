@@ -12,22 +12,20 @@
 ;; Globals
 (defonce server (atom nil))
 
-(defn request->page-response [page]
-  (fn [req]
-    {:status 200
-     :body   (stylefy/query-with-styles
-              (fn []
-                (hiccup/html (layout/page page))))}))
+(def path-bodies
+  [["/ableton" ableton/ableton]
+   ["/" home/home]])
 
 (def routes
-  [{:path     "/ableton"
-    :method   :get
-    :headers  {"Content-Type" "text/html"}
-    :response (request->page-response ableton/ableton)}
-   {:path     "/"
-    :method   :get
-    :headers  {"Content-Type" "text/html"}
-    :response (request->page-response home/home)}])
+  (for [[path body] path-bodies]
+    {:path     path
+     :method   :get
+     :headers  {"Content-Type" "text/html"}
+     :response (fn [req]
+                 {:status 200
+                  :body   (stylefy/query-with-styles
+                           (fn []
+                             (hiccup/html (layout/page body))))})}))
 
 (defn handler [req]
   (ruuter/route routes req))
