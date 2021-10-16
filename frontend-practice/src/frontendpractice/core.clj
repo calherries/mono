@@ -14,12 +14,12 @@
 ;; Globals
 (defonce server (atom nil))
 
-(def path-bodies
+(defn path-bodies []
   [["/ableton" ableton/ableton]
    ["/" home/home]])
 
-(def routes
-  (for [[path body] path-bodies]
+(defn routes []
+  (for [[path body] (path-bodies)]
     {:path     path
      :method   :get
      :response (fn [req]
@@ -30,7 +30,7 @@
                               (hiccup/html (layout/page body))))})}))
 
 (defn handler [req]
-  (ruuter/route routes req))
+  (ruuter/route (routes) req))
 
 (defn start-server []
   (reset! server (ring-jetty/run-jetty

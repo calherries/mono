@@ -22,10 +22,11 @@
            :text-decoration :none
            :font-size       "30px"}
           {:href ""})
-      "Frontend Practice"]]]])
+      "Menu"]]]])
 
 (defn ableton []
-  [:body
+  [:body (use-style
+          {:font-family "Helvetica Neue"})
    (header)
    [:main
     [:div (use-style
@@ -41,9 +42,10 @@
             :line-height 1.1
             :font-size   "60px"
             :font-family "DM Serif Display"})
-      "Become a better frontend developer"]
+      "Become a frontend developer"]
      [:h2 (use-style
            {:text-align  :center
+            :font-family :sans-serif
             :font-weight :normal})
       "Take your skills to the next level by recreating "
       [:span (use-style
