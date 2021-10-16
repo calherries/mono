@@ -1,0 +1,2 @@
+{:deps {com.cognitect/transit-clj {:mvn/version "1.0.324"}
+        datalevin/datalevin {:mvn/version "0.5.25"}}}

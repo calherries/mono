@@ -1,6 +1,6 @@
 (ns frontendpractice.pages.ableton
   (:require [frontendpractice.util :as util]
-            [garden.core :refer [css]]
+            [garden.core :as garden]
             [stylefy.core :as stylefy :refer [use-style]]))
 
 (defn header []
@@ -38,16 +38,16 @@
             :gap            "10px"
             :padding        "30 20 30 20"})
      [:a (use-style
-          {:text-align  :center
-           :font-size   "10px"})
+          {:text-align "center"
+           :font-size  "10px"})
       "About"]
      [:a (use-style
-          {:text-align  :center
+          {:text-align  "center"
            :font-size   "10px"})
       "Jobs"]]
     [:div (use-style
            {:padding "20px"
-            :display :flex
+            :display "flex"
             :flex-direction :column
             :gap "20px"})
      [:header (use-style

@@ -1,7 +1,10 @@
 **/*/.cpcache
 **/*/.calva
 **/*/.nrepl-port
+**/*/.shadow-cljs
 **/*/vs-code.edn
 **/*/.vscode
+**/*/.lsp
+**/*/public/js
 .vscode
 .DS_Store
