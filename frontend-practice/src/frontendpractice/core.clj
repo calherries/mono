@@ -8,8 +8,7 @@
    [ring.adapter.jetty :as ring-jetty]
    [ring.middleware.defaults :as ring-defaults]
    [ruuter.core :as ruuter]
-   [stylefy.core :as stylefy]
-   ))
+   [stylefy.core :as stylefy]))
 
 ;; Globals
 (defonce server (atom nil))
