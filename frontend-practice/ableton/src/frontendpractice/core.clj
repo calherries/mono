@@ -1,6 +1,6 @@
-(ns ableton.core
+(ns frontendpractice.core
   (:require
-   [ableton.layout :as layout]
+   [frontendpractice.layout :as layout]
    [hiccup2.core :as hiccup]
    [ring.adapter.jetty :as ring-jetty]
    [ruuter.core :as ruuter]

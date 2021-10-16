@@ -1,4 +1,4 @@
-(ns ableton.layout
+(ns frontendpractice.layout
   (:require [garden.core :refer [css]]
             [stylefy.core :as stylefy :refer [use-style]]))
 
