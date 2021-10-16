@@ -1,10 +1,13 @@
 (ns frontendpractice.core
   (:require
    [frontendpractice.layout :as layout]
+   [frontendpractice.pages.home :as home]
+   [frontendpractice.pages.ableton :as ableton]
    [hiccup2.core :as hiccup]
    [ring.adapter.jetty :as ring-jetty]
    [ruuter.core :as ruuter]
-   [stylefy.core :as stylefy]))
+   [stylefy.core :as stylefy]
+   ))
 
 ;; Globals
 (defonce server (atom nil))
@@ -18,7 +21,7 @@
                  :body   (str
                           (stylefy/query-with-styles
                            (fn []
-                             (hiccup/html (layout/page)))))})}])
+                             (hiccup/html (layout/page home/home)))))})}])
 
 (defn handler [req]
   (ruuter/route routes req))
