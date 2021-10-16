@@ -12,22 +12,28 @@
 ;; Globals
 (defonce server (atom nil))
 
+(defn request->page-response [page]
+  (fn [req]
+    {:status 200
+     :body   (stylefy/query-with-styles
+              (fn []
+                (hiccup/html (layout/page page))))}))
+
 (def routes
-  [{:path     "/"
+  [{:path     "/ableton"
     :method   :get
     :headers  {"Content-Type" "text/html"}
-    :response (fn [req]
-                {:status 200
-                 :body   (str
-                          (stylefy/query-with-styles
-                           (fn []
-                             (hiccup/html (layout/page home/home)))))})}])
+    :response (request->page-response ableton/ableton)}
+   {:path     "/"
+    :method   :get
+    :headers  {"Content-Type" "text/html"}
+    :response (request->page-response home/home)}])
 
 (defn handler [req]
   (ruuter/route routes req))
 
 (defn start-server []
-  (reset! server (ring-jetty/run-jetty #'handler {:join? false :port 8001})))
+  (reset! server (ring-jetty/run-jetty #'handler {:join? false :port 8000})))
 
 (defn stop-server []
   (.stop @server)
