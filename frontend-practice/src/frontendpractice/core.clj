@@ -4,7 +4,9 @@
    [frontendpractice.pages.home :as home]
    [frontendpractice.pages.ableton :as ableton]
    [hiccup2.core :as hiccup]
+   [muuntaja.middleware]
    [ring.adapter.jetty :as ring-jetty]
+   [ring.middleware.defaults :as ring-defaults]
    [ruuter.core :as ruuter]
    [stylefy.core :as stylefy]
    ))
@@ -20,18 +22,23 @@
   (for [[path body] path-bodies]
     {:path     path
      :method   :get
-     :headers  {"Content-Type" "text/html"}
      :response (fn [req]
-                 {:status 200
-                  :body   (stylefy/query-with-styles
-                           (fn []
-                             (hiccup/html (layout/page body))))})}))
+                 {:status  200
+                  :headers {"Content-Type" "text/html"}
+                  :body    (stylefy/query-with-styles
+                            (fn []
+                              (hiccup/html (layout/page body))))})}))
 
 (defn handler [req]
   (ruuter/route routes req))
 
 (defn start-server []
-  (reset! server (ring-jetty/run-jetty #'handler {:join? false :port 8000})))
+  (reset! server (ring-jetty/run-jetty
+                  (-> #'handler
+                      muuntaja.middleware/wrap-format
+                      (ring-defaults/wrap-defaults ring-defaults/site-defaults))
+                  {:join? false
+                   :port  8000})))
 
 (defn stop-server []
   (.stop @server)
