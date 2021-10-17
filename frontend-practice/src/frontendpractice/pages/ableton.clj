@@ -1,7 +1,10 @@
 (ns frontendpractice.pages.ableton
-  (:require [frontendpractice.util :as util]
+  (:require [frontendpractice.style :as style]
+            [frontendpractice.util :as util]
             [garden.core :as garden]
             [stylefy.core :as stylefy :refer [use-style]]))
+
+;; https://www.frontendpractice.com/project/ableton
 
 (defn header []
   [:header
@@ -23,9 +26,30 @@
           {:href ""})
       "Menu"]]]])
 
+(def a-style
+  (use-style
+   {:text-align "center"
+    :font-size  "15px"}))
+
+(defn one-style []
+  (use-style
+   {:font-size   "20px"
+    :line-height 1.5}))
+
+(defn two-style []
+  (use-style
+   {:font-size   "14px"
+    :line-height 2.0}))
+
+(defn two-paragraph-style []
+  (use-style
+            {:display        :flex
+             :flex-direction :column
+             :gap            "10px"}))
+
 (defn ableton []
   [:body (use-style
-          {:font-family "Helvetica Neue"})
+          {:font-family "futura-pt"})
    (header)
    [:div (use-style
           {:height     0
@@ -37,37 +61,42 @@
             :align-items   :center
             :gap            "10px"
             :padding        "30 20 30 20"})
-     [:a (use-style
-          {:text-align "center"
-           :font-size  "10px"})
+     [:a a-style
       "About"]
-     [:a (use-style
-          {:text-align  "center"
-           :font-size   "10px"})
+     [:a a-style
       "Jobs"]]
     [:div (use-style
-           {:padding "20px"
-            :display "flex"
+           {:padding        "0 40px"
+            :display        "flex"
             :flex-direction :column
-            :gap "20px"})
+            :gap            "20px"})
      [:header (use-style
-               {:display         :flex
-                :background-color :grey
-                :flex-direction  :row
-                :justify-content :center})
+               {:display             :flex
+                :background-color    :grey
+                :background-size     :cover
+                :height              "calc(100vh - 100px)"
+                :background-position "50% 50%"
+                :background-image    "url(\"https://ableton-production.imgix.net/about/header.jpg?auto=format&dpr=2&fit=crop&fm=jpg&h=646&ixjsv=1.1.3&q=50&w=349\")"
+                :flex-direction      :row
+                :justify-content     :center})
       [:h1 (use-style
-            {:font-family "futura-pt"
-             :font-size   "60px"})
+            {:font-size   "70px"
+             :font-weight "bold"
+             :color       style/orange
+             :position    "absolute"
+             :top         "50%"})
        "Ableton"]]
-     [:div (use-style
-            {:display :flex
-             :flex-direction :column
-             :gap "10px"})
-      [:p (use-style
-           {:font-size "20px"
-            :line-height 1.5})
-       "We make " [:a {:href ""} "Live"] ", " [:a {:href ""} "Push"] " and " [:a {:href ""} "Link"] " — unique software and hardware for music creation and performance. With these products, our community of users creates amazing things."]
-      [:p (use-style
-           {:font-size "14px"
-            :line-height 1.5})
+     [:div (two-paragraph-style)
+      [:p (one-style)
+       "We make " [:a {:href ""} "Live"] ", " [:a {:href ""} "Push"] " and "
+       [:a {:href ""} "Link"] " — unique software and hardware for music creation and performance."
+       "With these products, our community of users creates amazing things."]
+      [:p (two-style)
+       "Ableton was founded in 1999 and released the first version of Live in 2001. Our products are used by a community of dedicated musicians, sound designers, and artists from across the world."]]
+     [:div (two-paragraph-style)
+      [:p (one-style)
+       "We make " [:a {:href ""} "Live"] ", " [:a {:href ""} "Push"] " and "
+       [:a {:href ""} "Link"] " — unique software and hardware for music creation and performance."
+       "With these products, our community of users creates amazing things."]
+      [:p (two-style)
        "Ableton was founded in 1999 and released the first version of Live in 2001. Our products are used by a community of dedicated musicians, sound designers, and artists from across the world."]]]]])
