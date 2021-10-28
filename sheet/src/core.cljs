@@ -1,69 +1,61 @@
-(ns core)
+(ns core
+  (:require [helins.canvas :as c]))
 
-(def canvas (first (.getElementsByClassName js/document "sheet_canvas")))
+(def canvas (first (js/document.getElementsByClassName "sheet_canvas")))
 
 (def ctx (.getContext canvas "2d"))
 
-(set! (.-fillStyle ctx) "rgb(200, 0, 0)")
-(.fillRect ctx 10 10 50 50)
+(def img
+  (js/Image.))
 
-(set! (.-fillStyle ctx) "rgb(0, 0, 200, 0.5)")
-(.fillRect ctx 50 30 50 50)
+(set! (.-src img)
+  "https://static01.nyt.com/images/2014/01/28/science/28SLOT_SPAN/28SLOT-articleLarge.jpg?quality=75&auto=webp&disable=upscale")
 
+(defn draw-frame
 
-(set! (.-fillStyle ctx) "rgb(0, 0, 0, 0.9)")
+  [ctx]
 
-(defn rounded-rect [ctx x y width height radius]
-  (doto ctx
-    (.beginPath)
-    (.moveTo x (+ y radius))
-    (.lineTo x (+ y (- height radius)))
-    (.arcTo x (+ y height) (+ x radius) (+ y height) radius)
-    (.lineTo (+ x (- width radius)) (+ y height))
-    (.arcTo (+ x width) (+ y height) (+ x width) (+ y (- height radius)) radius)
-    (.lineTo (+ x width) (+ y radius))
-    (.arcTo (+ x width) y (+ x (- width radius)) y radius)
-    (.lineTo (+ x radius) y)
-    (.arcTo x y x (+ y radius) radius)
-    (.stroke)))
+  (-> ctx
+      (c/color-fill (c/grad-linear ctx 0 0 1000 400 [[0   "black"]
+                                                               [0.5 "blue"]
+                                                               [1   "black"]]))
+      (c/rect-fill 0 0 1000 400)
+      (c/smoothing? true)
+      (c/paste img
+        500
+        0)
+      (c/color-fill "white")
+      (c/color-stroke "grey")
+      (c/line-width 2)
+      (c/font "bold 200px serif")
+      (c/text-fill 50 100 "Hello")
+      (c/shadow 10 10 10 "green")
+      (c/text-stroke 100 200 "Hello")))
 
 (doto ctx
-  (rounded-rect 12, 12, 150, 150, 15)
-  (rounded-rect 19, 19, 150, 150, 15))
+  (set! .fill)
+  (.rect 20 20 150 150))
 
-(doto ctx
-  (.beginPath)
-  (.arc 37 37 13 (/ js/Math.PI 7) (/ (- js/Math.PI) 7) false)
-  (.lineTo 31 37)
-  (.fill)
+(-> ctx
+    (c/color-fill (c/grad-linear ctx 0 0 1000 400 [[0   "black"]
+                                                   [0.5 "blue"]
+                                                   [1   "black"]]))
+    (c/rect-fill 0 0 1000 400))
+
+(comment
+  (draw-frame ctx)
+  (do
+    (def frame
+      (c/on-frame (fn draw [_timestamp]
+                    (try
+                      (draw-frame ctx)
+                      true
+                      (catch :default e
+                        (js/console.log "err" e)
+                        false)))))
+    (frame))
+  (frame)
   )
-;;   (rounded-rect 53, 53, 49, 33, 10)
-;;   (rounded-rect 53, 119, 49, 16, 6)
-;;   (rounded-rect 135, 53, 49, 33, 10)
-;;   (rounded-rect 135, 119, 25, 49, 10))
-
-;; ctx.beginPath ();
-;; ctx.moveTo (75, 50);
-;; ctx.lineTo (100, 75);
-;; ctx.lineTo (100, 25);
-;; ctx.fill ();
-(doto ctx
-  (.beginPath)
-  (.moveTo 75 50)
-  (.lineTo 100 75)
-  (.lineTo 100 25)
-  (.fill))
-
-(doto ctx
-  (.beginPath)
-  (.arc 75 75 50 0 (* (.-PI js/Math) 2) true)
-  (.moveTo 110 75)
-  (.arc 75 75 35 0 (.-PI js/Math) false)
-  (.moveTo 65 65)
-  (.arc 60 65 5 0 (* (.-PI js/Math) 2) true)
-  (.moveTo 95 65)
-  (.arc 90 65 5 0 (* (.-PI js/Math) 2) true)
-  (.stroke))
 
 (defn init []
   (js/console.log "init"))
