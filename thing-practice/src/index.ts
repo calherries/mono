@@ -1,8 +1,33 @@
-import {} from "@thi.ng/rstream";
-import { $compile } from "@thi.ng/rdom";
-import {} from "@thi.ng/parse";
-import {} from "@thi.ng/transducers";
+/**
+ * This file is just a silly example to show everything working in the browser.
+ * When you're ready to start on your site, clear the file. Happy hacking!
+ **/
+
+import confetti from 'canvas-confetti';
+import { reactive } from '@thi.ng/rstream';
+import { $compile } from '@thi.ng/rdom';
+import { count, scan } from '@thi.ng/transducers';
+
+const counter = reactive(0).transform(scan(count()));
 
 $compile(
-    ["div", {}, ["h1", {}, "Hello, Youtube"]]
+    [
+        "div",
+        {},
+        [
+            "h1",
+            { 
+                onclick: () => counter.next(0)
+            },
+            "Hello, World... ",
+            counter
+        ]
+    ]
 ).mount(document.body)
+
+// confetti.create(document.getElementById('canvas') as HTMLCanvasElement, {
+//   resize: true,
+//   useWorker: true,
+// })({ particleCount: 200, spread: 200 });
+
+
