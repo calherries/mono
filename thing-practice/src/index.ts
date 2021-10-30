@@ -16,6 +16,7 @@ $compile(
         [
             "h1",
             { 
+                class: counter.map((x) => ["cyan", "magenta"][x % 2]),
                 onclick: () => counter.next(0)
             },
             "Hello, World... ",
