@@ -26,26 +26,26 @@
           {:href ""})
       "Menu"]]]])
 
-(def a-style
+(defn a-style []
   (use-style
-   {:text-align "center"
-    :font-size  "15px"}))
+    {:text-align "center"
+     :font-size  "15px"}))
 
-(defn one-style []
+(defn first-paragraph-style []
   (use-style
-   {:font-size   "20px"
-    :line-height 1.5}))
+    {:font-size   "20px"
+     :line-height 1.5}))
 
-(defn two-style []
+(defn second-paragraph-style []
   (use-style
-   {:font-size   "14px"
-    :line-height 2.0}))
+    {:font-size   "14px"
+     :line-height 2.0}))
 
 (defn two-paragraph-style []
   (use-style
-            {:display        :flex
-             :flex-direction :column
-             :gap            "10px"}))
+    {:display        :flex
+     :flex-direction :column
+     :gap            "10px"}))
 
 (defn ableton []
   [:body (use-style
@@ -61,9 +61,9 @@
             :align-items   :center
             :gap            "10px"
             :padding        "30 20 30 20"})
-     [:a a-style
+     [:a (a-style)
       "About"]
-     [:a a-style
+     [:a (a-style)
       "Jobs"]]
     [:div (use-style
            {:padding        "0 40px"
@@ -87,16 +87,16 @@
              :top         "50%"})
        "Ableton"]]
      [:div (two-paragraph-style)
-      [:p (one-style)
+      [:p (first-paragraph-style)
        "We make " [:a {:href ""} "Live"] ", " [:a {:href ""} "Push"] " and "
-       [:a {:href ""} "Link"] " — unique software and hardware for music creation and performance."
+       [:a {:href ""} "Link"] " — unique software and hardware for music creation and performance. "
        "With these products, our community of users creates amazing things."]
-      [:p (two-style)
+      [:p (second-paragraph-style)
        "Ableton was founded in 1999 and released the first version of Live in 2001. Our products are used by a community of dedicated musicians, sound designers, and artists from across the world."]]
      [:div (two-paragraph-style)
-      [:p (one-style)
+      [:p (first-paragraph-style)
        "We make " [:a {:href ""} "Live"] ", " [:a {:href ""} "Push"] " and "
        [:a {:href ""} "Link"] " — unique software and hardware for music creation and performance."
        "With these products, our community of users creates amazing things."]
-      [:p (two-style)
+      [:p (second-paragraph-style)
        "Ableton was founded in 1999 and released the first version of Live in 2001. Our products are used by a community of dedicated musicians, sound designers, and artists from across the world."]]]]])
