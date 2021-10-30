@@ -3,12 +3,11 @@
  * When you're ready to start on your site, clear the file. Happy hacking!
  **/
 
-import confetti from 'canvas-confetti';
 import { reactive } from '@thi.ng/rstream';
 import { $compile } from '@thi.ng/rdom';
 import { count, scan } from '@thi.ng/transducers';
 
-const counter = reactive(0).transform(scan(count()));
+const counter = reactive(0).transform(scan(count(100)));
 
 $compile(
     [
