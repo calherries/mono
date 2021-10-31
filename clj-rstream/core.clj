@@ -1,27 +1,20 @@
 (ns core)
 
-(defn stream [src]
-  1)
-
-(defn done [stream]
-  1)
-
-(defn  [stream v]
-  1)
-
-(defn subscribe [stream subscriber]
-  1)
+(defprotocol ISubscriber
+  (just [this x])
+  (done [this])
+  (error [this e]))
 
 (defprotocol ISubscribable
-  (just [subscriber x])
-  (done [subscriber])
-  (error [subscriber e]))
+  (subscribe [this subscriber])
+  (unsubscribe-self [this])
+  (unsubscribe-child [this subscriber]))
 
 (defrecord Trace []
-  ISubscribable
-  (just [subscriber x] (prn x))
-  (done [subscriber] (prn "done"))
-  (error [subscriber e] (prn "error" e)))
+  ISubscriber
+  (just [trace x] (prn x))
+  (done [trace] (prn "done"))
+  (error [trace e] (prn "error" e)))
 
 (comment
   (doto (->Trace)
