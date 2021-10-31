@@ -6,30 +6,28 @@
 (defn done [stream]
   1)
 
-(defn value [stream v]
+(defn  [stream v]
   1)
 
 (defn subscribe [stream subscriber]
   1)
 
-(defmulti just :type)
-(defmulti done :type)
-(defmulti error :type)
+(defprotocol ISubscribable
+  (just [subscriber x])
+  (done [subscriber])
+  (error [subscriber e]))
 
-(defmethod just :trace
-  [subscriber x]
-  (prn x))
-
-(defmethod done :trace
-  [subscriber]
-  (prn "done"))
-
-(defmethod error :trace
-  [subscriber e]
-  (prn "error" e))
+(defrecord Trace []
+  ISubscribable
+  (just [subscriber x] (prn x))
+  (done [subscriber] (prn "done"))
+  (error [subscriber e] (prn "error" e)))
 
 (comment
-  (error {:type :trace} "hey")
+  (doto (->Trace)
+    (just "p")
+    (done)
+    (error "p"))
   )
 
 (comment
