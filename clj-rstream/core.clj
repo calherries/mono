@@ -23,17 +23,28 @@
   (error [trace e] (prn "error" e)))
 
 (defn has-subscribable-state [sub]
-  (contains? #{:idle :active} (:state sub)))
+  (contains? #{:idle :active} (.state sub)))
 
 (defn ensure-state [sub]
-  (when-not (contains? #{:idle :active} (:state sub))
-    (throw (Error. (str "Illegal operation with state " (:state sub))))))
+  (when-not (contains? #{:idle :active} (.state sub))
+    (throw (Error. (str "Illegal operation with state " (.state sub))))))
 
-(defrecord Stream [src state parent subs last]
+(defprotocol ISetX
+  (set-x [this o]))
+
+(defprotocol IGetX
+  (get-x [this]))
+
+(deftype Stream [src
+                 ^:unsynchronized-mutable state
+                 ^:unsynchronized-mutable parent
+                 ^:unsynchronized-mutable subs
+                 ^:unsynchronized-mutable last]
   ISubscribable
   (subscribe [stream subscriber]
     (ensure-state stream)
-    (update stream :subs conj subscriber) ;; Note I'm not declaring a parent attribute yet
+    (set! subs (conj subs subscriber))
+    ;; (update stream :subs conj subscriber) ;; Note I'm not declaring a parent attribute yet
     )
   (unsubscribe-self [stream] 1)
   (unsubscribe-child [stream subscriber] 1)
@@ -42,15 +53,34 @@
   (done [stream] (prn "done"))
   (error [stream e] (prn "error" e))
   ISubscription
-  (state [stream] (:state stream))
-  (parent [stream] (:parent stream))
+  (state [stream] state)
+  (parent [stream] parent)
   IDeref
   (deref [stream]
-    (when (not= (:last stream) :SEMAPHORE)
-      (:last stream))))
+    (when (not= last :SEMAPHORE)
+      last))
+  ISetX
+  (set-x [this o]
+    (set! state o))
+  IGetX
+  (get-x [stream]
+    subs)
+  )
 
-;; To help with pprint in the console
-(prefer-method print-method clojure.lang.IPersistentMap clojure.lang.IDeref)
+(defmethod print-method Stream [v ^java.io.Writer w]
+  (.write w "<<-XYZ->>"))
+
+(defmethod print-method Stream [stream ^java.io.Writer writer]
+  (doto writer
+    (.write "#stream ")
+    (.write (str (state stream)))
+    (.write (str (parent stream)))
+    (.write "...subs"))
+  (doall (map (fn [el]
+                (.write writer ".")
+                (.write writer (str el)))
+           (get-x stream))))
+
 
 (defn make-stream [src]
   (->Stream src :idle nil '() :SEMAPHORE))
@@ -60,7 +90,8 @@
 
 (comment
   (let [stream (make-stream (fn [s] "hey"))
-        stream (assoc stream :state :active)]
+        _ (subscribe stream 2)
+        _ (set-x stream :active)]
     stream)
 
   (let [stream (make-stream (fn [s] "hey"))
