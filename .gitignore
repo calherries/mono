@@ -1,6 +1,7 @@
 **/*/.cpcache
 **/*/.calva
 **/*/.nrepl-port
+**/*/.clj-kondo
 **/*/.shadow-cljs
 **/*/vs-code.edn
 **/*/.vscode

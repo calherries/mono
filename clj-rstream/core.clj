@@ -64,8 +64,7 @@
     (set! state o))
   IGetX
   (get-x [stream]
-    subs)
-  )
+    subs))
 
 (defmethod print-method Stream [v ^java.io.Writer w]
   (.write w "<<-XYZ->>"))
@@ -111,8 +110,77 @@
                 (error "p")
                 (done)))]))
 
+(defn state [subscription]
+  (:state @subscription))
+
+(defn ensure-state [subscription]
+  (when-not (contains? #{:idle :active} (state subscription))
+    (throw (Error. (str "Illegal operation with state " (state subscription))))))
+
+(defn subscribe [subscription subscriber]
+  (ensure-state subscription)
+  (swap! subscription update :subs conj subscriber)
+  ((:src @subscription) subscriber))
+
+(defn unsubscribe-self [subscription]
+  (swap! subscription update :subs (fn [subs]
+                                     (remove #{subscr}))))
+
+(defn unsubscribe-child [subscription subscriber]
+  (swap! subscription update :subs (fn [subs]
+                                     (remove #{subscriber} subs))))
+
+(def initial-stream
+  {:type  :stream
+   :state :idle
+   :last  :SEMAPHORE
+   :subs  []})
+
+(defn stream
+  ([] (atom initial-stream))
+  ([src]
+    (atom (assoc initial-stream
+            :src src))))
+
+;; In rstream this is actually split into dispatch and dispatchTo
+(defn dispatch [subscription x]
+  (swap! subscription update :last x)
+  ;; Check if there is a wrapped subscription and dispatch next to that
+  (doseq [child-sub subs]
+    (next child-sub x)))
+
+(defn just [subscriber x]
+  (case (:type @subscriber)
+    :stream (when (contains? #{:idle :active} (state @subscriber)) ;; Actually for subscriptions
+              (dispatch sub x)) ;; Actually need to check if there's a xform
+    :trace (prn x)))
+
+
+(defn done [subscriber]
+  (case (:type @subscriber)
+    :stream (when (contains? #{:idle :active} (state subscription))
+              (swap! subscriber assoc :state :done))
+    :trace (prn "done")))
+
+(defn error [subscriber e]
+  (case (:type @subscriber)
+    :stream (when (contains? #{:idle :active :done} (state subscription))
+              (swap! subscriber assoc :state :error))
+    :trace (prn "erorr" e)))
+
+(defn trace []
+  (atom {:type :trace}))
+
+(defn dref [subscription]
+  (let [last (:last @subscription)]
+    (when (not= last :SEMAPHORE)
+      last)))
 
 (comment
+
+  (dref (stream (fn [s]
+                  (just 1)
+                  (done))))
   (def a (stream (fn [s]
                    (doto s
                      (just 1)
